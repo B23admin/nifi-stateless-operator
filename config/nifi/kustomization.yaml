@@ -1,0 +1,7 @@
+# Adds namespace to all resources.
+namespace: nifi-fn-operator-system
+
+resources:
+- nifi.yaml
+- nifi_service.yaml
+- registry_service.yaml

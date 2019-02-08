@@ -1,0 +1,37 @@
+# This patch adds nifi and nifi-registry containers to use as the editing canvas for the
+# flows and flow library respectively
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nifi
+  namespace: system
+  labels:
+    app: nifi
+spec:
+  selector:
+    matchLabels:
+      app: nifi
+  serviceName: nifi-service
+  template:
+    metadata:
+      labels:
+        app: nifi
+    spec:
+      containers:
+      - name: nifi
+        image: apache/nifi:latest
+        env:
+        - name: NIFI_WEB_HTTP_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: NIFI_WEB_HTTP_PORT
+          value: "8081"
+        ports:
+        - name: nifi-http
+          containerPort: 8081
+      - name: nifi-registry
+        image: apache/nifi-registry:latest
+        ports:
+        - name: registry-http
+          containerPort: 18080

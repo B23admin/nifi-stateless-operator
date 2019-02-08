@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nifi-service
+  namespace: system
+spec:
+  type: LoadBalancer
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 90
+  selector:
+    app: nifi
+  ports:
+  - port: 8081
+    targetPort: nifi-http
