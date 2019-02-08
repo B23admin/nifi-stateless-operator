@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= dbkegley/nififn-operator:latest
 
 all: test manager
 
@@ -24,6 +24,12 @@ install: manifests
 deploy: manifests
 	kubectl apply -f config/crds
 	kustomize build config/default | kubectl apply -f -
+
+# Generate manifests for cluster deployments and push the new controller image to dockerhub
+gen-release: manifests docker-build docker-push
+	mkdir -p config/deploy
+	kustomize build config/default > config/deploy/nifi-fn-operator.yaml
+	kustomize build config/nifi > config/deploy/nifi.yaml
 
 # Generate manifests e.g. CRD, RBAC etc.
 manifests:
