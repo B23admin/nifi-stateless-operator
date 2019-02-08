@@ -1,0 +1,3 @@
+version: "1"
+domain: b23.io
+repo: github.com/b23llc/nifi-fn-operator
