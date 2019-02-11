@@ -55,12 +55,17 @@ spec:
               fieldPath: status.podIP
         - name: NIFI_WEB_HTTP_PORT
           value: "8081"
-        image: apache/nifi:latest
+        image: dbkegley/dev:nifi-1.8.0
         name: nifi
         ports:
         - containerPort: 8081
           name: nifi-http
-      - image: apache/nifi-registry:latest
+      - env:
+        - name: NIFI_REGISTRY_WEB_HTTP_HOST
+          value: 0.0.0.0
+        - name: NIFI_REGISTRY_WEB_HTTP_PORT
+          value: "18080"
+        image: apache/nifi-registry:latest
         name: nifi-registry
         ports:
         - containerPort: 18080

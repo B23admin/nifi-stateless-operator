@@ -1,6 +1,5 @@
-# nifi-fn-operator #
-An Operator for scheduling and executing NiFi Flows as Jobs on Kubernetes
-The operator is made possible by [NiFi-Fn](https://github.com/apache/nifi/pull/3241)
+# B23 Kubernetes Operator for NiFi-Fn #
+An Operator for scheduling and executing NiFi Flows on Kubernetes. The operator is made possible by [NiFi-Fn](https://github.com/apache/nifi/pull/3241)
 
 ### Install the NiFi-Fn Operator on a cluster ###
 
@@ -25,7 +24,7 @@ kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-fn-operator/maste
 Note that this nifi/registry pod is a convenience and should not be used for production workloads.
 
 Test the operator by creating a `NiFiFn` Resource. Make sure to update the `flow` and `bucket` fields
-with uuids of flows from your registry.
+with the uuid of a flow from your registry.
 
 ```
 # config/samples/nififn_v1alpha1_nififn.yaml
@@ -53,14 +52,15 @@ Requires:
 - [kubebuilder](https://book.kubebuilder.io/getting_started/what_is_kubebuilder.html)
 - [kustomize](https://github.com/kubernetes-sigs/kustomize)
 
-##### Develop #####
+#### Develop ####
 
 Build/Test Image: `make docker-build`
 Install CRDs: `make install`
 Deploy Operator: `make deploy`
 
-##### Release #####
+#### Release ####
 
 Run `make gen-release` target to test/build/tag the docker image, generate the CRDs, generate operator install and rbac manifests and push the image to docker hub
 
 > Tested locally with [docker-for-mac](https://docs.docker.com/v17.12/docker-for-mac/install/) Version 2.0.0.2 (30215)
+and on Google Cloud Platform with [Google Kubernetes Engine]((https://cloud.google.com/kubernetes-engine/))
