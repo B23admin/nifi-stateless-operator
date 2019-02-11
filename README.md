@@ -26,7 +26,7 @@ Note that this nifi/registry pod is a convenience and should not be used for pro
 Test the operator by creating a `NiFiFn` Resource. Make sure to update the `flow` and `bucket` fields
 with the uuid of a flow from your registry.
 
-```
+```yaml
 # config/samples/nififn_v1alpha1_nififn.yaml
 apiVersion: nififn.b23.io/v1alpha1
 kind: NiFiFn
@@ -45,7 +45,7 @@ spec:
   - "absolute.path-/path/to/input/data/;filename-testfile.txt"
 ```
 
-```
+```shell
 david@ ~/b23/go/src/github.com/b23llc/nifi-fn-operator (master) $ kubectl -n nifi-fn-operator-system get NiFiFn
 NAME            FLOW                                   VERSION   AGE
 nififn-sample   9935adec-1dfc-4873-9c4e-6d6ea5962bd8   -1        25s
@@ -55,7 +55,7 @@ Name:         nififn-sample
 Namespace:    nifi-fn-operator-system
 Labels:       controller-tools.k8s.io=1.0
 Annotations:  kubectl.kubernetes.io/last-applied-configuration:
-                {"apiVersion":"nififn.b23.io/v1alpha1","kind":"NiFiFn","metadata":{"annotations":{},"labels":{"controller-tools.k8s.io":"1.0"},"name":"nif...
+                {"apiVersion":"nififn.b23.io/v1alpha1","kind":"NiFiFn","metadata":{"annotations":{},"labels":{"controller-tools.k8s.io":"1.0"},"name":"nif..."}}
 API Version:  nififn.b23.io/v1alpha1
 Kind:         NiFiFn
 Metadata:
@@ -86,7 +86,6 @@ SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorSta
 21:09:09.613 [main] INFO org.apache.nifi.processors.standard.DebugFlow - DebugFlow[id=91f679b4-07c6-45c1-acf7-7308764d380e] DebugFlow transferring to success file=testfile.txt UUID=ac8032be-6f4e-4fed-b918-902f639ae75b
 Flow Succeeded
 ```
-
 
 ### Build ###
 
