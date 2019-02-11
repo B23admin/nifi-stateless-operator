@@ -63,4 +63,4 @@ Deploy Operator: `make deploy`
 Run `make gen-release` target to test/build/tag the docker image, generate the CRDs, generate operator install and rbac manifests and push the image to docker hub
 
 > Tested locally with [docker-for-mac](https://docs.docker.com/v17.12/docker-for-mac/install/) Version 2.0.0.2 (30215)
-and on Google Cloud Platform with [Google Kubernetes Engine]((https://cloud.google.com/kubernetes-engine/))
+and on Google Cloud Platform with [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/)
