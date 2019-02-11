@@ -22,6 +22,8 @@ spec:
   names:
     kind: NiFiFn
     plural: nififns
+    shortNames:
+    - nifns
   scope: Namespaced
   validation:
     openAPIV3Schema:
