@@ -13,7 +13,6 @@ spec:
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 90
-  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -30,7 +29,6 @@ spec:
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 90
-  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: StatefulSet

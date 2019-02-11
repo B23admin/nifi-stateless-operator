@@ -4,7 +4,6 @@ metadata:
   name: registry-service
   namespace: system
 spec:
-  type: LoadBalancer
   sessionAffinity: ClientIP
   sessionAffinityConfig:
     clientIP:

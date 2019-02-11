@@ -21,7 +21,11 @@ If you also want to run a Nifi/Registry Pod to use as a canvas for developing an
 kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-fn-operator/master/config/deploy/nifi.yaml
 ```
 
-Test the operator by creating a `NiFiFn` Resource after updating the `flow` and `bucket` fields
+> To access the nifi/registry services, run: `kubectl -n nifi-fn-operator-system port-forward statefulset/nifi 8081:8081 18080:18080`
+Note that this nifi/registry pod is a convenience and should not be used for production workloads.
+
+Test the operator by creating a `NiFiFn` Resource. Make sure to update the `flow` and `bucket` fields
+with uuids of flows from your registry.
 
 ```
 # config/samples/nififn_v1alpha1_nififn.yaml
