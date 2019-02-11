@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: nifi
-        image: dbkegley/dev:nifi-1.8.0
+        image: dbkegley/nifi:1.8.0
         env:
         - name: NIFI_WEB_HTTP_HOST
           valueFrom:
@@ -31,7 +31,7 @@ spec:
         - name: nifi-http
           containerPort: 8081
       - name: nifi-registry
-        image: apache/nifi-registry:latest
+        image: apache/nifi-registry:0.3.0
         env:
         - name: NIFI_REGISTRY_WEB_HTTP_HOST
           value: "0.0.0.0"
