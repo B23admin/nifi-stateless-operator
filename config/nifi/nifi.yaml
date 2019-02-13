@@ -20,6 +20,7 @@ spec:
       containers:
       - name: nifi
         image: dbkegley/nifi:1.8.0
+        imagePullPolicy: Always
         env:
         - name: NIFI_WEB_HTTP_HOST
           valueFrom:
@@ -32,6 +33,7 @@ spec:
           containerPort: 8081
       - name: nifi-registry
         image: apache/nifi-registry:0.3.0
+        imagePullPolicy: Always
         env:
         - name: NIFI_REGISTRY_WEB_HTTP_HOST
           value: "0.0.0.0"

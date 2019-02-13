@@ -56,6 +56,7 @@ spec:
         - name: NIFI_WEB_HTTP_PORT
           value: "8081"
         image: dbkegley/nifi:1.8.0
+        imagePullPolicy: Always
         name: nifi
         ports:
         - containerPort: 8081
@@ -66,6 +67,7 @@ spec:
         - name: NIFI_REGISTRY_WEB_HTTP_PORT
           value: "18080"
         image: apache/nifi-registry:0.3.0
+        imagePullPolicy: Always
         name: nifi-registry
         ports:
         - containerPort: 18080
