@@ -36,7 +36,7 @@ metadata:
   name: nififn-sample
   namespace: nifi-fn-operator-system
 spec:
-  image: "samhjelmfelt/nifi-fn:latest"
+  image: "dbkegley/nifi-stateless:1.10.0-SNAPSHOT"
   registryUrl: "http://registry-service:18080"
   bucket: "703b95c2-ad6b-4c3c-aa20-af634a964d2c"
   flow: "92a849c8-3ed3-413d-a360-9d474f999a42"
@@ -70,7 +70,7 @@ Spec:
   Flow Files:
     absolute.path-/path/to/input/data/;filename-testfile.txt
   Flow Version:  -1
-  Image:         samhjelmfelt/nifi-fn:latest
+  Image:         dbkegley/nifi-stateless:1.10.0-SNAPSHOT
   Registry URL:  http://registry-service:18080
 Events:          <none>
 
