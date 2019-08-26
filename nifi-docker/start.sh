@@ -19,6 +19,19 @@ scripts_dir='/opt/nifi/scripts'
 
 [ -f "${scripts_dir}/common.sh" ] && . "${scripts_dir}/common.sh"
 
+# Override JVM memory settings
+if [ ! -z "${NIFI_JVM_HEAP_INIT}" ]; then
+    prop_replace 'java.arg.2'       "-Xms${NIFI_JVM_HEAP_INIT}" ${nifi_bootstrap_file}
+fi
+
+if [ ! -z "${NIFI_JVM_HEAP_MAX}" ]; then
+    prop_replace 'java.arg.3'       "-Xmx${NIFI_JVM_HEAP_MAX}" ${nifi_bootstrap_file}
+fi
+
+if [ ! -z "${NIFI_JVM_DEBUGGER}" ]; then
+    uncomment "java.arg.debug" ${nifi_bootstrap_file}
+fi
+
 # Establish baseline properties
 prop_replace 'nifi.web.http.port'               "${NIFI_WEB_HTTP_PORT:-8080}"
 prop_replace 'nifi.web.http.host'               "${NIFI_WEB_HTTP_HOST:-$HOSTNAME}"
@@ -40,11 +53,7 @@ prop_replace 'nifi.zookeeper.connect.string'                "${NIFI_ZK_CONNECT_S
 prop_replace 'nifi.zookeeper.root.node'                     "${NIFI_ZK_ROOT_NODE:-/nifi}"
 prop_replace 'nifi.cluster.flow.election.max.wait.time'     "${NIFI_ELECTION_MAX_WAIT:-5 mins}"
 prop_replace 'nifi.cluster.flow.election.max.candidates'    "${NIFI_ELECTION_MAX_CANDIDATES:-}"
-
-# B23: Override to allow setting NIFI_WEB_PROXY_HOST from env even nifi is unsecured
-# Do not run nifi in an unsecured mode if the endpoint is exposed to the public internet.
-prop_replace 'nifi.web.proxy.host' "${NIFI_WEB_PROXY_HOST:-}"
-prop_replace 'nifi.web.proxy.context.path' "${NIFI_WEB_PROXY_CONTEXT_PATH:-}"
+prop_replace 'nifi.web.proxy.context.path'                  "${NIFI_WEB_PROXY_CONTEXT_PATH:-}"
 
 # B23: Add network interfaces for kubectl port-forward
 # https://bugzilla.redhat.com/show_bug.cgi?id=1461477
@@ -66,6 +75,11 @@ case ${AUTH} in
 
         . "${scripts_dir}/secure.sh"
         . "${scripts_dir}/update_login_providers.sh"
+        ;;
+    *)
+        if [ ! -z "${NIFI_WEB_PROXY_HOST}" ]; then
+            echo 'NIFI_WEB_PROXY_HOST was set but NiFi is not configured to run in a secure mode.  Will not update nifi.web.proxy.host.'
+        fi
         ;;
 esac
 

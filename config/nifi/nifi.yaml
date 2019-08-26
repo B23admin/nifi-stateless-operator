@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: nifi
-        image: dbkegley/nifi:1.8.0
+        image: dbkegley/nifi:1.9.2
         imagePullPolicy: Always
         env:
         - name: NIFI_WEB_HTTP_HOST
