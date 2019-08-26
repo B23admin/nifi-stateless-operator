@@ -55,7 +55,7 @@ spec:
               fieldPath: status.podIP
         - name: NIFI_WEB_HTTP_PORT
           value: "8081"
-        image: dbkegley/nifi:1.8.0
+        image: dbkegley/nifi:1.9.2
         imagePullPolicy: Always
         name: nifi
         ports:
