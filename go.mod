@@ -1,4 +1,4 @@
-module nifi.b23.io/project
+module nifi-stateless.b23.io/project
 
 go 1.12
 

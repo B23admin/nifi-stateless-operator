@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// +kubebuilder:rbac:groups=nififns.nififn.nifi.b23.io,resources=nififns,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=nififns.nififn.nifi.b23.io,resources=nififns/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=nififns.nififn.nifi-stateless.b23.io,resources=nififns,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=nififns.nififn.nifi-stateless.b23.io,resources=nififns/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get;update;patch
 package controllers
@@ -37,7 +37,7 @@ import (
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	nififnv1alpha1 "nifi.b23.io/project/api/v1alpha1"
+	nififnv1alpha1 "nifi-stateless.b23.io/project/api/v1alpha1"
 )
 
 // NiFiFnReconciler reconciles a NiFiFn object

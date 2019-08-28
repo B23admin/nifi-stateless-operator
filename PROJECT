@@ -1,5 +1,5 @@
 version: "2"
-domain: nifi.b23.io
+domain: nifi-stateless.b23.io
 repo: github.com/b23llc/nifi-stateless-operator/project
 resources:
 - group: nififn
