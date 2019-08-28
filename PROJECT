@@ -1,3 +1,7 @@
-version: "1"
-domain: b23.io
-repo: github.com/b23llc/nifi-fn-operator
+version: "2"
+domain: nifi.b23.io
+repo: github.com/b23llc/nifi-stateless-operator/project
+resources:
+- group: nififn
+  version: v1alpha1
+  kind: NiFiFn
