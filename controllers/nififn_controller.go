@@ -13,6 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// +kubebuilder:rbac:groups=nififns.nififn.nifi.b23.io,resources=nififns,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=nififns.nififn.nifi.b23.io,resources=nififns/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get;update;patch
 package controllers
 
 import (
@@ -45,10 +49,6 @@ type NiFiFnReconciler struct {
 
 // Reconcile reads that state of the cluster for a NiFiFn object and makes changes based on the state read
 // and what is in the NiFiFn.Spec
-// +kubebuilder:rbac:groups=nififn.nifi.b23.io,resources=nififns,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=nififn.nifi.b23.io,resources=nififns/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get;update;patch
 func (r *NiFiFnReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	_ = context.Background()
 	_ = r.Log.WithValues("nififn", req.NamespacedName)
