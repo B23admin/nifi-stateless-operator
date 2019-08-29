@@ -5,8 +5,8 @@ metadata:
 spec:
   image: "dbkegley/nifi-stateless:1.10.0-SNAPSHOT"
   registryUrl: "http://registry-service:18080"
-  bucketId: "703b95c2-ad6b-4c3c-aa20-af634a964d2c"
-  flowId: "92a849c8-3ed3-413d-a360-9d474f999a42"
+  bucketId: "8444dc91-00f3-415c-a965-256ffa28c3f5"
+  flowId: "d6045598-3d11-438d-b921-52d466b66314"
   flowVersion: -1
   flowFiles:
   - "absolute.path-/path/to/input/data/;filename-testfile.txt"
