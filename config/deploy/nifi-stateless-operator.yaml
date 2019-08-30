@@ -1,0 +1,337 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: nifi-stateless-operator-system
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: nififns.nififn.nifi-stateless.b23.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.flow
+    description: The UUID of the Flow in NiFi-Registry
+    name: Flow
+    type: string
+  - JSONPath: .spec.flowVersion
+    description: The version of the NiFiFlow
+    name: Version
+    type: integer
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
+  group: nififn.nifi-stateless.b23.io
+  names:
+    kind: NiFiFn
+    plural: nififns
+  scope: ""
+  subresources: {}
+  validation:
+    openAPIV3Schema:
+      description: 'NiFiFn is the Schema for the nififns API TODO: +kubebuilder:subresource:status
+        TODO: +kubebuilder:subresource:scale'
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: NiFiFnSpec defines the desired state of NiFiFn
+          properties:
+            bucketId:
+              maxLength: 36
+              minLength: 36
+              type: string
+            failurePortIds:
+              items:
+                type: string
+              type: array
+            flowFiles:
+              items:
+                additionalProperties:
+                  type: string
+                type: object
+              minItems: 1
+              type: array
+            flowId:
+              maxLength: 36
+              minLength: 36
+              type: string
+            flowVersion:
+              format: int32
+              type: integer
+            flowXmlPath:
+              type: string
+            materializeContent:
+              type: boolean
+            parameters:
+              additionalProperties:
+                type: string
+              type: object
+            registryUrl:
+              type: string
+            runFrom:
+              enum:
+              - registry
+              - xml
+              type: string
+            ssl:
+              description: SSLConfig defines an SSL context for securing NiFi communication
+              properties:
+                keyPass:
+                  type: string
+                keystoreFile:
+                  type: string
+                keystorePass:
+                  type: string
+                keystoreType:
+                  type: string
+                truststoreFile:
+                  type: string
+                truststorePass:
+                  type: string
+                truststoreType:
+                  type: string
+              required:
+              - keyPass
+              - keystoreFile
+              - keystorePass
+              - keystoreType
+              - truststoreFile
+              - truststorePass
+              - truststoreType
+              type: object
+          required:
+          - flowFiles
+          - runFrom
+          type: object
+        status:
+          description: NiFiFnStatus defines the observed state of NiFiFn
+          properties:
+            flow:
+              type: string
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: nifi-stateless-operator-leader-election-role
+  namespace: nifi-stateless-operator-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: nifi-stateless-operator-manager-role
+rules:
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - nififns.nififn.nifi-stateless.b23.io
+  resources:
+  - nififns
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - nififns.nififn.nifi-stateless.b23.io
+  resources:
+  - nififns/status
+  verbs:
+  - get
+  - patch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: nifi-stateless-operator-proxy-role
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: nifi-stateless-operator-leader-election-rolebinding
+  namespace: nifi-stateless-operator-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: nifi-stateless-operator-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: nifi-stateless-operator-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nifi-stateless-operator-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nifi-stateless-operator-manager-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: nifi-stateless-operator-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nifi-stateless-operator-proxy-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nifi-stateless-operator-proxy-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: nifi-stateless-operator-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "8443"
+    prometheus.io/scheme: https
+    prometheus.io/scrape: "true"
+  labels:
+    control-plane: controller-manager
+  name: nifi-stateless-operator-controller-manager-metrics-service
+  namespace: nifi-stateless-operator-system
+spec:
+  ports:
+  - name: https
+    port: 8443
+    targetPort: https
+  selector:
+    control-plane: controller-manager
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: nifi-stateless-operator-controller-manager
+  namespace: nifi-stateless-operator-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+    spec:
+      containers:
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=10
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.4.0
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+      - args:
+        - --metrics-addr=127.0.0.1:8080
+        - --enable-leader-election
+        command:
+        - /manager
+        image: dbkegley/nifi-stateless-operator:latest
+        name: manager
+        resources:
+          limits:
+            cpu: 100m
+            memory: 30Mi
+          requests:
+            cpu: 100m
+            memory: 20Mi
+      terminationGracePeriodSeconds: 10
