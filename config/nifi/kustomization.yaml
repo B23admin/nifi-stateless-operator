@@ -1,5 +1,5 @@
 # Adds namespace to all resources.
-namespace: nifi-fn-operator-system
+namespace: nifi-stateless-operator-system
 
 resources:
 - nifi.yaml

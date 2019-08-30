@@ -1,6 +1,7 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= dbkegley/nifi-stateless-operator:latest
+
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true"
 
@@ -61,6 +62,13 @@ docker-build: test
 # Push the docker image
 docker-push:
 	docker push ${IMG}
+
+# Generate manifests for cluster deployments and push the new controller image to dockerhub
+gen-release: manifests docker-build docker-push
+	mkdir -p config/deploy
+	cd config/manager && kustomize edit set image controller=${IMG}
+	kustomize build config/default > config/deploy/nifi-stateless-operator.yaml
+	kustomize build config/nifi > config/deploy/nifi.yaml
 
 # find or download controller-gen
 # download controller-gen if necessary
