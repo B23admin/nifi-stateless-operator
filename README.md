@@ -1,6 +1,8 @@
 # B23 Kubernetes Operator for NiFi-Fn #
 An Operator for scheduling and executing NiFi Flows on Kubernetes. The operator is made possible by [NiFi-Fn](https://github.com/apache/nifi/pull/3241)
 
+> This is a proof of concept for the proposed Kubernetes Runtime for NiFiFn (now NiFi-Stateless)
+
 ### Install the NiFi-Fn Operator on a cluster ###
 
 If you just want to run the NiFiFn operator on your cluster:
