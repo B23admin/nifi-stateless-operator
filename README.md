@@ -1,13 +1,13 @@
-# B23 Kubernetes Operator for NiFi-Fn #
+# B23 Kubernetes Operator for NiFi-Stateless #
 
-An Operator for scheduling and executing NiFi Flows on Kubernetes. The operator is made possible by [NiFi-Fn](https://github.com/apache/nifi/pull/3241)
+An Operator for scheduling and executing NiFi Flows on Kubernetes. The operator is made possible by [NiFi-Stateless](https://github.com/apache/nifi/pull/3241)
 
 > This is a proof of concept for the proposed Kubernetes Runtime for [nifi-stateless](https://github.com/apache/nifi/tree/master/nifi-stateless)
 
 
-### Install the NiFi-Fn Operator on a cluster ###
+### Install the Operator on a cluster ###
 
-If you just want to run the NiFiFn operator on your cluster:
+If you just want to run the operator on your cluster:
 
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-stateless-operator/master/config/deploy/nifi-stateless-operator.yaml
@@ -19,7 +19,7 @@ If you also want to run a Nifi/Registry Pod to use as a canvas as a convenience 
 kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-stateless-operator/master/config/deploy/nifi.yaml
 ```
 
-> To access the nifi/registry services, run: `kubectl -n nifi-fn-operator-system port-forward statefulset/nifi 8081:8081 18080:18080`
+> To access the nifi/registry services, run: `kubectl -n nifi-stateless-operator-system port-forward statefulset/nifi 8081:8081 18080:18080`
 Note that this nifi/registry pod is a convenience and should not be used for production workloads.
 
 Test the operator by creating a `NiFiFn` Resource. Make sure to update the `flow` and `bucket` fields
@@ -33,6 +33,7 @@ metadata:
   name: nififn-sample
 spec:
   # image: "dbkegley/nifi-stateless:1.10.0-SNAPSHOT"
+  runFrom: registry
   registryUrl: "http://registry-service:18080"
   bucketId: "8444dc91-00f3-415c-a965-256ffa28c3f5"
   flowId: "d6045598-3d11-438d-b921-52d466b66314"
@@ -44,6 +45,15 @@ spec:
     filename: hello.txt
     nifi_content: "hello world"
 ```
+
+It is also possible to run from a `flow.xml.gz` file:
+
+```dockerfile
+FROM dbkegley/nifi-stateless:1.10.0-SNAPSHOT
+ADD flow.xml.gz /opt/nifi/nifi-current/conf/flow.xml.gz
+```
+
+and update the NiFiFn spec to set: `runFrom: xml`
 
 
 ### Build ###
@@ -71,5 +81,6 @@ and on Google Cloud Platform with [Google Kubernetes Engine](https://cloud.googl
 
 ### User notes ###
 
+- the NiFiFn project was renamed to nifi-stateless but I'm keeping the NiFiFn as the CRD resource type here because it's easier to type
 - ssl configurations are accessible in plain text via the kubernetes api using `kubectl describe nififn`
 - sensitive parameters are not supported
