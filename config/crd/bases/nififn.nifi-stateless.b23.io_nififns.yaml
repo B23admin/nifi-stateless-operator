@@ -22,9 +22,7 @@ spec:
   names:
     kind: NiFiFn
     plural: nififns
-    shortNames:
-    - nifn
-  scope: Namespaced
+  scope: ""
   subresources: {}
   validation:
     openAPIV3Schema:
@@ -50,9 +48,15 @@ spec:
               maxLength: 36
               minLength: 36
               type: string
-            flowFiles:
+            failurePortIds:
               items:
                 type: string
+              type: array
+            flowFiles:
+              items:
+                additionalProperties:
+                  type: string
+                type: object
               minItems: 1
               type: array
             flowId:
@@ -62,24 +66,56 @@ spec:
             flowVersion:
               format: int32
               type: integer
-            image:
-              pattern: .+:.+
+            flowXmlPath:
               type: string
+            materializeContent:
+              type: boolean
+            parameters:
+              additionalProperties:
+                type: string
+              type: object
             registryUrl:
               type: string
+            runFrom:
+              enum:
+              - registry
+              - xml
+              type: string
+            ssl:
+              description: SSLConfig defines an SSL context for securing NiFi communication
+              properties:
+                keyPass:
+                  type: string
+                keystoreFile:
+                  type: string
+                keystorePass:
+                  type: string
+                keystoreType:
+                  type: string
+                truststoreFile:
+                  type: string
+                truststorePass:
+                  type: string
+                truststoreType:
+                  type: string
+              required:
+              - keyPass
+              - keystoreFile
+              - keystorePass
+              - keystoreType
+              - truststoreFile
+              - truststorePass
+              - truststoreType
+              type: object
           required:
-          - bucketId
           - flowFiles
-          - flowId
-          - registryUrl
+          - runFrom
           type: object
         status:
           description: NiFiFnStatus defines the observed state of NiFiFn
           properties:
             flow:
               type: string
-          required:
-          - flow
           type: object
       type: object
   version: v1alpha1
