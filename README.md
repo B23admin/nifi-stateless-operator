@@ -2,24 +2,21 @@
 
 An Operator for scheduling and executing NiFi Flows on Kubernetes. The operator is made possible by [NiFi-Fn](https://github.com/apache/nifi/pull/3241)
 
+> This is a proof of concept for the proposed Kubernetes Runtime for [nifi-stateless](https://github.com/apache/nifi/tree/master/nifi-stateless)
+
 
 ### Install the NiFi-Fn Operator on a cluster ###
 
 If you just want to run the NiFiFn operator on your cluster:
 
 ```shell
-# install CRDs
-kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-fn-operator/master/config/crds/nififn_v1alpha1_nififn.yaml
-
-# install operator
-kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-fn-operator/master/config/deploy/nifi-fn-operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-stateless-operator/master/config/deploy/nifi-stateless-operator.yaml
 ```
 
-If you also want to run a Nifi/Registry Pod to use as a canvas for developing and testing flows, run:
+If you also want to run a Nifi/Registry Pod to use as a canvas as a convenience for developing and testing flows, run:
 
 ```shell
-# install nifi/registry pods
-kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-fn-operator/master/config/deploy/nifi.yaml
+kubectl apply -f https://raw.githubusercontent.com/b23llc/nifi-stateless-operator/master/config/deploy/nifi.yaml
 ```
 
 > To access the nifi/registry services, run: `kubectl -n nifi-fn-operator-system port-forward statefulset/nifi 8081:8081 18080:18080`
@@ -35,7 +32,7 @@ kind: NiFiFn
 metadata:
   name: nififn-sample
 spec:
-  image: "dbkegley/nifi-stateless:1.10.0-SNAPSHOT"
+  # image: "dbkegley/nifi-stateless:1.10.0-SNAPSHOT"
   registryUrl: "http://registry-service:18080"
   bucketId: "8444dc91-00f3-415c-a965-256ffa28c3f5"
   flowId: "d6045598-3d11-438d-b921-52d466b66314"
@@ -43,6 +40,9 @@ spec:
   flowFiles:
   - absolute.path: /path/to/input/data/
     filename: testfile.txt
+  - absolute.path: /path/to/input/data/
+    filename: hello.txt
+    nifi_content: "hello world"
 ```
 
 
@@ -72,4 +72,4 @@ and on Google Cloud Platform with [Google Kubernetes Engine](https://cloud.googl
 ### User notes ###
 
 - ssl configurations are accessible in plain text via the kubernetes api using `kubectl describe nififn`
-- sensitive parameters are no supported
+- sensitive parameters are not supported
