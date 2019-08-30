@@ -13,37 +13,71 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package v1alpha1 defines NiFiFn types for the controller
+// +kubebuilder:validation:Optional
 package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// SSLConfig defines an SSL context for securing NiFi communication
+type SSLConfig struct {
+	// +kubebuilder:validation:Required
+	KeystoreFile string `json:"keystoreFile"`
+	// +kubebuilder:validation:Required
+	KeystorePass string `json:"keystorePass"`
+	// +kubebuilder:validation:Required
+	KeyPass string `json:"keyPass"`
+	// +kubebuilder:validation:Required
+	KeystoreType string `json:"keystoreType"`
+	// +kubebuilder:validation:Required
+	TruststoreFile string `json:"truststoreFile"`
+	// +kubebuilder:validation:Required
+	TruststorePass string `json:"truststorePass"`
+	// +kubebuilder:validation:Required
+	TruststoreType string `json:"truststoreType"`
+}
+
 // NiFiFnSpec defines the desired state of NiFiFn
 type NiFiFnSpec struct {
 
-	// RegistryVariables map[string,string]
+	// FailureRetry
+	// FailureBackoff
 	// TTLSecondsAfterFinished int32
 
-	RegistryURL string `json:"registryUrl"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=registry;xml
+	RunFrom string `json:"runFrom"`
+
+	RegistryURL string `json:"registryUrl,omitempty"`
 
 	// +kubebuilder:validation:MaxLength=36
 	// +kubebuilder:validation:MinLength=36
-	BucketID string `json:"bucketId"`
+	BucketID string `json:"bucketId,omitempty"`
 
 	// +kubebuilder:validation:MaxLength=36
 	// +kubebuilder:validation:MinLength=36
-	FlowID string `json:"flowId"`
+	FlowID string `json:"flowId,omitempty"`
 
-	// +kubebuilder:validation:Optional
-	FlowVersion int32 `json:"flowVersion"`
+	FlowVersion int32 `json:"flowVersion,omitempty"`
 
-	// +kubebuilder:validation:MinItems=1
-	FlowFiles []string `json:"flowFiles"`
+	FlowXMLPath string `json:"flowXmlPath,omitempty"`
 
-	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=.+:.+
-	Image string `json:"image"`
+	Image string `json:"-"`
+
+	MaterializeContent bool `json:"materializeContent,omitempty"`
+
+	FailurePortIDs []string `json:"failurePortIds,omitempty"`
+
+	SSLConfig `json:"ssl,omitempty"`
+
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	FlowFiles []map[string]string `json:"flowFiles"`
+
+	Parameters map[string]string `json:"parameters,omitempty"`
 }
 
 // NiFiFnStatus defines the observed state of NiFiFn
@@ -53,6 +87,7 @@ type NiFiFnStatus struct {
 	// Flow string
 	// Bucket string
 	// Queued Files ?
+	// Processed Files ?
 
 	Flow string `json:"flow"`
 }
@@ -63,7 +98,6 @@ type NiFiFnStatus struct {
 // +kubebuilder:printcolumn:name="Flow",type="string",JSONPath=".spec.flow",description="The UUID of the Flow in NiFi-Registry"
 // +kubebuilder:printcolumn:name="Version",type="integer",JSONPath=".spec.flowVersion",description="The version of the NiFiFlow"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:resource:shortName=nifn
 // TODO: +kubebuilder:subresource:status
 // TODO: +kubebuilder:subresource:scale
 type NiFiFn struct {

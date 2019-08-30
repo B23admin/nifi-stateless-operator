@@ -22,6 +22,7 @@ package controllers
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -36,6 +37,8 @@ import (
 	nifi "nifi-stateless.b23.io/project/api/v1alpha1"
 )
 
+const defaultImage = "dbkegley/nifi-stateless:1.10.0-SNAPSHOT"
+
 // NiFiFnReconciler reconciles a NiFiFn object
 type NiFiFnReconciler struct {
 	client.Client
@@ -49,26 +52,41 @@ func (r *NiFiFnReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	log := r.Log.WithValues("nififn", req.NamespacedName)
 
-	// todo: fix this job constructor for nifi-stateless:1.10.0-SNAPSHOT image
 	constructJobForNiFiFn := func(nififn *nifi.NiFiFn, jobName string) (*batchv1.Job, error) {
-		args := append(
-			[]string{
-				"RunFromRegistry",
-				"Once",
-				nififn.Spec.RegistryURL,
-				nififn.Spec.BucketID,
-				nififn.Spec.FlowID,
-				"DestinationDirectory-/tmp/nififn/output2/",
-				"", // [<Failure Output Ports>]
-			},
-			nififn.Spec.FlowFiles...)
+		runFromCmdLookup := map[string]string{
+			"xml":      "RunFromFlowXml",
+			"registry": "RunFromRegistry",
+		}
+		runFrom := runFromCmdLookup[nififn.Spec.RunFrom]
+
+		image := defaultImage
+		if nififn.Spec.Image != "" {
+			image = nififn.Spec.Image
+		}
+
+		// Make sure nifi_content is defined for every flowfile, otherwise nifi-stateless throws a null ptr
+		for _, item := range nififn.Spec.FlowFiles {
+			if _, ok := item["nifi_content"]; !ok {
+				item["nifi_content"] = ""
+			}
+		}
+
+		jsonConfig, err := json.Marshal(nififn.Spec)
+		if err != nil {
+			return nil, err
+		}
+
+		args := []string{
+			runFrom,
+			"Once",
+			"--json",
+			string(jsonConfig),
+		}
 
 		job := &batchv1.Job{
 			ObjectMeta: metav1.ObjectMeta{
-				Labels:      make(map[string]string),
-				Annotations: make(map[string]string),
-				Name:        jobName,
-				Namespace:   nififn.Namespace,
+				Name:      jobName,
+				Namespace: nififn.Namespace,
 			},
 			Spec: batchv1.JobSpec{
 				Template: corev1.PodTemplateSpec{
@@ -77,7 +95,7 @@ func (r *NiFiFnReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 						Containers: []corev1.Container{
 							{
 								Name:  "nifi-stateless",
-								Image: nififn.Spec.Image,
+								Image: image,
 								Args:  args,
 							},
 						},
