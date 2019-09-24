@@ -24,11 +24,12 @@ import (
 
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
-	nififnv1alpha1 "nifi-stateless.b23.io/project/api/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	nififnv1alpha1 "nifi-stateless.b23.io/project/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 )
 
