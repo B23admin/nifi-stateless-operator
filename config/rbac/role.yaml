@@ -27,7 +27,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - nififns.nififn.nifi-stateless.b23.io
+  - nififn.nifi-stateless.b23.io
   resources:
   - nififns
   verbs:
@@ -39,7 +39,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - nififns.nififn.nifi-stateless.b23.io
+  - nififn.nifi-stateless.b23.io
   resources:
   - nififns/status
   verbs:
