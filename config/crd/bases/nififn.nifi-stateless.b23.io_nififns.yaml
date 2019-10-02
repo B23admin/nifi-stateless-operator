@@ -26,8 +26,7 @@ spec:
   subresources: {}
   validation:
     openAPIV3Schema:
-      description: 'NiFiFn is the Schema for the nififns API TODO: +kubebuilder:subresource:status
-        TODO: +kubebuilder:subresource:scale'
+      description: NiFiFn is the Schema for the nififns API
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
