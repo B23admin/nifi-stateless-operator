@@ -98,8 +98,6 @@ type NiFiFnStatus struct {
 // +kubebuilder:printcolumn:name="Flow",type="string",JSONPath=".spec.flow",description="The UUID of the Flow in NiFi-Registry"
 // +kubebuilder:printcolumn:name="Version",type="integer",JSONPath=".spec.flowVersion",description="The version of the NiFiFlow"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-// TODO: +kubebuilder:subresource:status
-// TODO: +kubebuilder:subresource:scale
 type NiFiFn struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
