@@ -2,7 +2,7 @@
 
 An Operator for scheduling and executing NiFi Flows on Kubernetes. The operator is made possible by [NiFi-Stateless](https://github.com/apache/nifi/pull/3241)
 
-> This is a proof of concept for the proposed Kubernetes Runtime for [nifi-stateless](https://github.com/apache/nifi/tree/master/nifi-stateless)
+> This is a proof of concept for the proposed Kubernetes Runtime for [nifi-stateless](https://github.com/apache/nifi/tree/rel/nifi-1.10.0/nifi-nar-bundles/nifi-framework-bundle/nifi-framework/nifi-stateless)
 
 
 ### Install the Operator on a cluster ###
