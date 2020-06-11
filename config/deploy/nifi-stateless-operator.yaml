@@ -72,6 +72,8 @@ spec:
               type: integer
             flowXmlPath:
               type: string
+            image:
+              type: string
             materializeContent:
               type: boolean
             parameters:
