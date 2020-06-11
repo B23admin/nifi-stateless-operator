@@ -65,7 +65,7 @@ type NiFiFnSpec struct {
 	FlowXMLPath string `json:"flowXmlPath,omitempty"`
 
 	// +kubebuilder:validation:Pattern=.+:.+
-	Image string `json:"-"`
+	Image string `json:"image,omitempty"`
 
 	MaterializeContent bool `json:"materializeContent,omitempty"`
 
